@@ -37,6 +37,15 @@ return new class extends Migration
         });
     }
 
+
+    public function appointments()
+    {
+        return $this->hasMany(
+            Appointment::class,
+            'patient_id'
+        );
+    }
+
     /**
      * Reverse the migrations.
      */
