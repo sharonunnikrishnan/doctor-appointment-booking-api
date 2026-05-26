@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Appointment;
 use Illuminate\Support\Facades\DB;
+use App\Events\AppointmentBooked;
 
 class AppointmentService
 {
@@ -23,7 +24,11 @@ class AppointmentService
                 );
             }
 
-            return Appointment::create($data);
+            $appointment = Appointment::create($data);
+
+            event(new AppointmentBooked($appointment));
+
+            return $appointment;
         });
     }
 
