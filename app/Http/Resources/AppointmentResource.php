@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,22 +13,38 @@ class AppointmentResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray($request)
-    {
+    public function toArray(
+        Request $request
+    ): array {
+
         return [
-            'id'=>$this->id,
 
-            'doctor'=>$this->doctor->user->name,
+            'id' => $this->id,
 
-            'date'=>$this->appointment_date,
+            'doctor' => [
+                'id' => $this->doctor?->id,
+                'name' => $this->doctor?->user?->name,
+                'specialization' =>
+                    $this->doctor?->specialization
+            ],
 
-            'time'=>$this->appointment_time,
+            'patient' => [
+                'id' => $this->patient?->id,
+                'name' => $this->patient?->name,
+                'email' => $this->patient?->email
+            ],
 
-            'status'=>$this->status
+            'appointment_date' =>
+                $this->appointment_date,
+
+            'appointment_time' =>
+                $this->appointment_time,
+
+            'status' =>
+                $this->status,
+
+            'remarks' =>
+                $this->remarks
         ];
-
-        return AppointmentResource::collection(
-            Appointment::latest()->get()
-        );
     }
 }

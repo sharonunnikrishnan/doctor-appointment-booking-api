@@ -3,7 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DoctorController;
-
+use App\Http\Controllers\Api\AppointmentController;
 
 Route::post('/register',
     [AuthController::class,'register']);
@@ -18,10 +18,14 @@ Route::middleware('auth:sanctum')
         [AuthController::class,'logout']);
 
     Route::apiResource(
-            'doctors',
-            DoctorController::class
-        );
+        'doctors',
+        DoctorController::class
+    );
 
+    Route::apiResource(
+        'appointments',
+        AppointmentController::class
+    );
 });
 
 Route::middleware('auth:sanctum')

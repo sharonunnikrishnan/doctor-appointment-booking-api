@@ -38,6 +38,7 @@ class DoctorController extends Controller
         StoreDoctorRequest $request
     )
     {
+
         $doctor = $this->doctorService->create([
 
             'user_id' => auth()->id(),
