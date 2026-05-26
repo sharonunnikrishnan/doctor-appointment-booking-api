@@ -12,6 +12,7 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 
 use App\Http\Resources\AppointmentResource;
+use Illuminate\Support\Facades\Gate;
 
 class AppointmentController extends Controller
 {
@@ -94,6 +95,12 @@ class AppointmentController extends Controller
         Appointment $appointment
     )
     {
+
+        Gate::authorize(
+            'view',
+            $appointment
+        );
+
         $appointment->load([
             'doctor.user',
             'patient'
@@ -112,6 +119,11 @@ class AppointmentController extends Controller
         Appointment $appointment
     )
     {
+         Gate::authorize(
+            'update',
+            $appointment
+        );
+
         $appointment =
             $this->service->update(
                 $appointment,
@@ -136,6 +148,11 @@ class AppointmentController extends Controller
         Appointment $appointment
     )
     {
+        Gate::authorize(
+            'delete',
+            $appointment
+        );
+
         $this->service
             ->delete($appointment);
 
