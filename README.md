@@ -1,58 +1,578 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏥 Doctor Appointment Booking API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful Doctor Appointment Booking System built with Laravel 13.
 
-## About Laravel
+This project demonstrates modern Laravel development practices including:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel Sanctum Authentication
+- Service Layer Architecture
+- Form Request Validation
+- API Resources
+- Eloquent Relationships
+- Authorization Policies
+- Event Driven Architecture
+- Queue Jobs
+- Email Notifications
+- Database Transactions
+- API Testing with Pest/PHPUnit
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# 🚀 Features
 
-## Learning Laravel
+## Authentication
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- User Registration
+- User Login
+- User Logout
+- Sanctum Token Authentication
+- Protected API Routes
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Doctor Management
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- Create Doctor Profile
+- Update Doctor Profile
+- View Doctor Details
+- List Doctors
+- Delete Doctor
 
-## Agentic Development
+## Appointment Management
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Book Appointment
+- View Appointments
+- Update Appointment Status
+- Cancel Appointment
+- Delete Appointment
 
-```bash
-composer require laravel/boost --dev
+## Authorization
 
-php artisan boost:install
+### Patient
+
+- Create appointments
+- View own appointments
+- Cancel own appointments
+
+### Doctor
+
+- View assigned appointments
+- Confirm appointments
+- Complete appointments
+
+### Admin
+
+- Full system access
+
+## Notifications
+
+- Appointment Booked Event
+- Event Listener
+- Queue Job Processing
+- Email Confirmation Notifications
+
+---
+
+# 🏗️ Architecture
+
+```text
+Controller
+    ↓
+Form Request Validation
+    ↓
+Service Layer
+    ↓
+Eloquent Models
+    ↓
+Database
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Event Workflow
 
-## Contributing
+```text
+Appointment Created
+        ↓
+AppointmentBooked Event
+        ↓
+SendAppointmentConfirmationListener
+        ↓
+SendAppointmentConfirmationJob
+        ↓
+Email Notification
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+# 🛠️ Tech Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- PHP 8.3+
+- Laravel 13
+- MySQL
+- Laravel Sanctum
+- Pest / PHPUnit
+- Mailtrap (for testing emails)
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 📂 Project Structure
 
-## License
+```text
+app
+├── Events
+│   └── AppointmentBooked.php
+│
+├── Http
+│   ├── Controllers
+│   ├── Requests
+│   └── Resources
+│
+├── Jobs
+│   └── SendAppointmentConfirmationJob.php
+│
+├── Listeners
+│   └── SendAppointmentConfirmationListener.php
+│
+├── Mail
+│   └── AppointmentConfirmationMail.php
+│
+├── Models
+│   ├── User.php
+│   ├── Doctor.php
+│   └── Appointment.php
+│
+├── Policies
+│   └── AppointmentPolicy.php
+│
+├── Services
+│   ├── DoctorService.php
+│   └── AppointmentService.php
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+# 🔗 Database Design
+
+## Users
+
+| Column | Type |
+|----------|----------|
+| id | bigint |
+| name | string |
+| email | string |
+| password | string |
+| role | enum |
+
+Roles:
+
+```text
+admin
+doctor
+patient
+```
+
+---
+
+## Doctors
+
+| Column | Type |
+|----------|----------|
+| id | bigint |
+| user_id | bigint |
+| specialization | string |
+| experience | integer |
+| consultation_fee | decimal |
+
+---
+
+## Appointments
+
+| Column | Type |
+|----------|----------|
+| id | bigint |
+| doctor_id | bigint |
+| patient_id | bigint |
+| appointment_date | date |
+| appointment_time | time |
+| status | enum |
+| remarks | text |
+
+Status:
+
+```text
+pending
+confirmed
+completed
+cancelled
+```
+
+---
+
+# 🔐 Authentication
+
+Authentication is implemented using Laravel Sanctum.
+
+## Register
+
+```http
+POST /api/register
+```
+
+Request:
+
+```json
+{
+    "name":"John Doe",
+    "email":"john@example.com",
+    "password":"password",
+    "password_confirmation":"password"
+}
+```
+
+---
+
+## Login
+
+```http
+POST /api/login
+```
+
+Request:
+
+```json
+{
+    "email":"john@example.com",
+    "password":"password"
+}
+```
+
+Response:
+
+```json
+{
+    "token":"1|xxxxxxxxxxxxx"
+}
+```
+
+Use token in header:
+
+```http
+Authorization: Bearer TOKEN
+```
+
+---
+
+## Logout
+
+```http
+POST /api/logout
+```
+
+---
+
+# 👨‍⚕️ Doctor APIs
+
+## Create Doctor
+
+```http
+POST /api/doctors
+```
+
+```json
+{
+    "specialization":"Cardiology",
+    "experience":10,
+    "consultation_fee":1000
+}
+```
+
+---
+
+## List Doctors
+
+```http
+GET /api/doctors
+```
+
+---
+
+## Show Doctor
+
+```http
+GET /api/doctors/{id}
+```
+
+---
+
+## Update Doctor
+
+```http
+PUT /api/doctors/{id}
+```
+
+```json
+{
+    "experience":15
+}
+```
+
+---
+
+## Delete Doctor
+
+```http
+DELETE /api/doctors/{id}
+```
+
+---
+
+# 📅 Appointment APIs
+
+## Create Appointment
+
+```http
+POST /api/appointments
+```
+
+Request:
+
+```json
+{
+    "doctor_id":1,
+    "appointment_date":"2026-06-01",
+    "appointment_time":"10:00"
+}
+```
+
+---
+
+## List Appointments
+
+```http
+GET /api/appointments
+```
+
+---
+
+## Show Appointment
+
+```http
+GET /api/appointments/{id}
+```
+
+---
+
+## Update Appointment
+
+```http
+PUT /api/appointments/{id}
+```
+
+```json
+{
+    "status":"confirmed",
+    "remarks":"Appointment approved"
+}
+```
+
+---
+
+## Delete Appointment
+
+```http
+DELETE /api/appointments/{id}
+```
+
+---
+
+# 🔒 Authorization Policies
+
+Implemented using Laravel Policies.
+
+Examples:
+
+- Patients can access only their appointments
+- Doctors can access appointments assigned to them
+- Admins can access all resources
+
+Example:
+
+```php
+$this->authorize(
+    'update',
+    $appointment
+);
+```
+
+---
+
+# ⚡ Queue System
+
+Queue Driver:
+
+```env
+QUEUE_CONNECTION=database
+```
+
+Create queue tables:
+
+```bash
+php artisan make:queue-table
+php artisan migrate
+```
+
+Start worker:
+
+```bash
+php artisan queue:work
+```
+
+---
+
+# 📧 Email Notifications
+
+When an appointment is booked:
+
+```text
+Appointment Created
+      ↓
+Event Fired
+      ↓
+Listener Triggered
+      ↓
+Queue Job Executed
+      ↓
+Email Sent
+```
+
+Mail testing:
+
+```env
+MAIL_MAILER=log
+```
+
+or Mailtrap SMTP.
+
+---
+
+# 🧪 Testing
+
+Run tests:
+
+```bash
+php artisan test
+```
+
+or
+
+```bash
+./vendor/bin/pest
+```
+
+Example test:
+
+```php
+test('patient can create appointment', function () {
+
+    $response = $this->postJson(
+        '/api/appointments',
+        [
+            'doctor_id' => 1,
+            'appointment_date' => now()
+                ->addDay()
+                ->toDateString(),
+            'appointment_time' => '10:00'
+        ]
+    );
+
+    $response->assertCreated();
+
+});
+```
+
+---
+
+# ⚙️ Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/your-username/doctor-appointment-booking-api.git
+```
+
+Move into project:
+
+```bash
+cd doctor-appointment-booking-api
+```
+
+Install dependencies:
+
+```bash
+composer install
+```
+
+Copy environment file:
+
+```bash
+cp .env.example .env
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+Configure database in `.env`.
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Install Sanctum:
+
+```bash
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+```
+
+Start development server:
+
+```bash
+php artisan serve
+```
+
+---
+
+# Future Improvements
+
+- Doctor Availability Slots
+- Online Video Consultation
+- Payment Gateway Integration
+- Prescription Management
+- Appointment Reminders
+- Admin Dashboard
+- React Frontend
+- Mobile App Integration
+
+---
+
+# 👨‍💻 Author
+
+**Sharon Unnikrishnan**
+
+Laravel Developer | PHP Developer | API Integration Specialist
+
+Technologies:
+
+- Laravel
+- PHP
+- MySQL
+- React.js
+- JavaScript
+- REST APIs
+- Sanctum Authentication
+- Queue Jobs
+- Event Driven Architecture
+
+---

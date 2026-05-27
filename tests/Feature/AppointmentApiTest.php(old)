@@ -1,0 +1,59 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Doctor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class AppointmentApiTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_patient_can_create_appointment(): void
+    {
+        // Create patient
+        $user = User::factory()->create();
+
+        // Create doctor user
+        $doctorUser = User::factory()->create([
+            'role' => 'doctor'
+        ]);
+
+        // Create doctor profile
+        $doctor = Doctor::create([
+            'user_id' => $doctorUser->id,
+            'specialization' => 'Cardiology',
+            'experience' => 10,
+            'consultation_fee' => 1000
+        ]);
+
+        // Create Sanctum token
+        $token = $user->createToken('test-token')
+            ->plainTextToken;
+
+        // Call API
+        $response = $this
+            ->withHeader(
+                'Authorization',
+                'Bearer ' . $token
+            )
+            ->postJson('/api/appointments', [
+                'doctor_id' => $doctor->id,
+                'appointment_date' => now()
+                    ->addDay()
+                    ->toDateString(),
+                'appointment_time' => '10:00',
+            ]);
+
+        // Assert response
+        $response->assertStatus(201);
+
+        // Assert database
+        $this->assertDatabaseHas('appointments', [
+            'doctor_id' => $doctor->id,
+            'patient_id' => $user->id,
+        ]);
+    }
+}

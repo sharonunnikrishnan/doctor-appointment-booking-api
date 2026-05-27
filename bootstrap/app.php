@@ -17,6 +17,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
         App\Providers\AuthServiceProvider::class,
     ])
+    ->withExceptions(function ($exceptions) {
+
+        $exceptions->render(
+            function (\Exception $e, $request) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+        );
+
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();

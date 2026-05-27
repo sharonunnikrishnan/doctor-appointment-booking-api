@@ -53,10 +53,11 @@ class DoctorController extends Controller
                 $request->consultation_fee
         ]);
 
-        return response()->json([
-            'message' => 'Doctor created successfully',
-            'data' => new DoctorResource($doctor)
-        ],201);
+        return $this->success(
+            new DoctorResource($doctor),
+            'Doctor created successfully',
+            201
+        );
     }
 
     /**
