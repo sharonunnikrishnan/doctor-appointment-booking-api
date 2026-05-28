@@ -31,6 +31,8 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        \Log::info($request->all());
+
         if(!Auth::attempt([
             'email'=>$request->email,
             'password'=>$request->password
